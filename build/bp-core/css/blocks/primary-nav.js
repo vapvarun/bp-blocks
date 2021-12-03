@@ -117,183 +117,79 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"bp-blogs/js/blocks/recent-posts/edit.js":[function(require,module,exports) {
-"use strict";
+})({"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
+var bundleURL = null;
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * WordPress dependencies.
- */
-const {
-  blockEditor: {
-    InspectorControls
-  },
-  components: {
-    Disabled,
-    PanelBody,
-    RangeControl,
-    TextControl,
-    ToggleControl
-  },
-  element: {
-    Fragment,
-    createElement
-  },
-  i18n: {
-    __
-  },
-  serverSideRender: ServerSideRender
-} = wp;
-
-const editRecentPostsBlock = ({
-  attributes,
-  setAttributes
-}) => {
-  const {
-    title,
-    maxPosts,
-    linkTitle
-  } = attributes;
-  return createElement(Fragment, null, createElement(InspectorControls, null, createElement(PanelBody, {
-    title: __('Settings', 'buddypress'),
-    initialOpen: true
-  }, createElement(TextControl, {
-    label: __('Title', 'buddypress'),
-    value: title,
-    onChange: text => {
-      setAttributes({
-        title: text
-      });
-    }
-  }), createElement(RangeControl, {
-    label: __('Max posts to show', 'buddypress'),
-    value: maxPosts,
-    onChange: value => setAttributes({
-      maxPosts: value
-    }),
-    min: 1,
-    max: 10,
-    required: true
-  }), createElement(ToggleControl, {
-    label: __('Link block title to Blogs directory', 'buddypress'),
-    checked: !!linkTitle,
-    onChange: () => {
-      setAttributes({
-        linkTitle: !linkTitle
-      });
-    }
-  }))), createElement(Disabled, null, createElement(ServerSideRender, {
-    block: "bp/recent-posts",
-    attributes: attributes
-  })));
-};
-
-var _default = editRecentPostsBlock;
-exports.default = _default;
-},{}],"bp-blogs/js/blocks/recent-posts/transforms.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * WordPress dependencies.
- */
-const {
-  blocks: {
-    createBlock
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
   }
-} = wp;
-/**
- * Transforms Legacy Widget to Recent Posts Block.
- *
- * @type {Object}
- */
 
-const transforms = {
-  from: [{
-    type: 'block',
-    blocks: ['core/legacy-widget'],
-    isMatch: ({
-      idBase,
-      instance
-    }) => {
-      if (!(instance !== null && instance !== void 0 && instance.raw)) {
-        return false;
+  return bundleURL;
+}
+
+function getBundleURL() {
+  // Attempt to find the URL of the current script and use that as the base URL
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
+var bundle = require('./bundle-url');
+
+function updateLink(link) {
+  var newLink = link.cloneNode();
+
+  newLink.onload = function () {
+    link.remove();
+  };
+
+  newLink.href = link.href.split('?')[0] + '?' + Date.now();
+  link.parentNode.insertBefore(newLink, link.nextSibling);
+}
+
+var cssTimeout = null;
+
+function reloadCSS() {
+  if (cssTimeout) {
+    return;
+  }
+
+  cssTimeout = setTimeout(function () {
+    var links = document.querySelectorAll('link[rel="stylesheet"]');
+
+    for (var i = 0; i < links.length; i++) {
+      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
+        updateLink(links[i]);
       }
-
-      return idBase === 'bp_blogs_recent_posts_widget';
-    },
-    transform: ({
-      instance
-    }) => {
-      return createBlock('bp/recent-posts', {
-        title: instance.raw.title,
-        maxPosts: instance.raw.max_posts,
-        linkTitle: instance.raw.link_title
-      });
     }
-  }]
-};
-var _default = transforms;
-exports.default = _default;
-},{}],"bp-blogs/js/blocks/recent-posts.js":[function(require,module,exports) {
-"use strict";
 
-var _edit = _interopRequireDefault(require("./recent-posts/edit"));
+    cssTimeout = null;
+  }, 50);
+}
 
-var _transforms = _interopRequireDefault(require("./recent-posts/transforms"));
+module.exports = reloadCSS;
+},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"bp-core/css/blocks/primary-nav.scss":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * WordPress dependencies.
- */
-const {
-  blocks: {
-    registerBlockType
-  },
-  i18n: {
-    __
-  }
-} = wp;
-/**
- * Internal dependencies.
- */
-
-registerBlockType('bp/recent-posts', {
-  title: __('Recent Networkwide Posts', 'buddypress'),
-  description: __('A list of recently published posts from across your network.', 'buddypress'),
-  icon: {
-    background: '#fff',
-    foreground: '#d84800',
-    src: 'wordpress'
-  },
-  category: 'buddypress',
-  attributes: {
-    title: {
-      type: 'string',
-      default: __('Recent Networkwide Posts', 'buddypress')
-    },
-    maxPosts: {
-      type: 'number',
-      default: 10
-    },
-    linkTitle: {
-      type: 'boolean',
-      default: false
-    }
-  },
-  edit: _edit.default,
-  transforms: _transforms.default
-});
-},{"./recent-posts/edit":"bp-blogs/js/blocks/recent-posts/edit.js","./recent-posts/transforms":"bp-blogs/js/blocks/recent-posts/transforms.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -497,4 +393,4 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","bp-blogs/js/blocks/recent-posts.js"], null)
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js"], null)

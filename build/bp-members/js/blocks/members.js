@@ -1,8 +1,721 @@
-parcelRequire=function(e,r,t,n){var i,o="function"==typeof parcelRequire&&parcelRequire,u="function"==typeof require&&require;function f(t,n){if(!r[t]){if(!e[t]){var i="function"==typeof parcelRequire&&parcelRequire;if(!n&&i)return i(t,!0);if(o)return o(t,!0);if(u&&"string"==typeof t)return u(t);var c=new Error("Cannot find module '"+t+"'");throw c.code="MODULE_NOT_FOUND",c}p.resolve=function(r){return e[t][1][r]||r},p.cache={};var l=r[t]=new f.Module(t);e[t][0].call(l.exports,p,l,l.exports,this)}return r[t].exports;function p(e){return f(p.resolve(e))}}f.isParcelRequire=!0,f.Module=function(e){this.id=e,this.bundle=f,this.exports={}},f.modules=e,f.cache=r,f.parent=o,f.register=function(r,t){e[r]=[function(e,r){r.exports=t},{}]};for(var c=0;c<t.length;c++)try{f(t[c])}catch(e){i||(i=e)}if(t.length){var l=f(t[t.length-1]);"object"==typeof exports&&"undefined"!=typeof module?module.exports=l:"function"==typeof define&&define.amd?define(function(){return l}):n&&(this[n]=l)}if(parcelRequire=f,i)throw i;return f}({"gr8I":[function(require,module,exports) {
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.EXTRA_DATA=exports.AVATAR_SIZES=void 0;const{i18n:{__:e}}=wp,s=[{label:e("None","buddypress"),value:"none"},{label:e("Thumb","buddypress"),value:"thumb"},{label:e("Full","buddypress"),value:"full"}];exports.AVATAR_SIZES=s;const t=[{label:e("None","buddypress"),value:"none"},{label:e("Last time the user was active","buddypress"),value:"last_activity"},{label:e("Latest activity the user posted","buddypress"),value:"latest_update"}];exports.EXTRA_DATA=t;
-},{}],"PZSE":[function(require,module,exports) {
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var e=require("./constants");const{blockEditor:{InspectorControls:t,BlockControls:a},components:{Placeholder:s,PanelBody:n,SelectControl:l,ToggleControl:r,Button:i,Dashicon:o,Tooltip:d,ToolbarGroup:m,RangeControl:u},element:{createElement:c,Fragment:p,useState:b},i18n:{__:y,sprintf:h},apiFetch:g,url:{addQueryArgs:v}}=wp,{blockComponents:{AutoCompleter:_},blockData:{isActive:f}}=bp,{reject:k,remove:A,sortBy:C}=lodash,x=e=>e&&e.mention_name?e.mention_name:null,S=({attributes:S,setAttributes:N,isSelected:D})=>{const T=f("members","avatar"),I=f("activity","mentions"),{itemIDs:P,avatarSize:M,displayMentionSlug:w,displayUserName:B,extraData:E,layoutPreference:R,columns:O}=S,q=0!==P.length,[j,z]=b([]),L=[{icon:"text",title:y("List view","buddypress"),onClick:()=>N({layoutPreference:"list"}),isActive:"list"===R},{icon:"screenoptions",title:y("Grid view","buddypress"),onClick:()=>N({layoutPreference:"grid"}),isActive:"grid"===R}];let F,G="bp-block-members avatar-"+M,Q=e.EXTRA_DATA;"grid"===R&&(G+=" is-grid columns-"+O,Q=e.EXTRA_DATA.filter(e=>"latest_update"!==e.value));return q&&P.length!==j.length&&g({path:v("/buddypress/v1/members",{populate_extras:!0,include:P})}).then(e=>{z(C(e,[e=>P.indexOf(e.id)]))}),j.length&&(F=j.map(e=>{let t=!1,a="member-content";return"list"===R&&"latest_update"===E&&e.latest_update&&e.latest_update.rendered&&(t=!0,a="member-content has-activity"),c("div",{key:"bp-member-"+e.id,className:a},D&&c(d,{text:y("Remove member","buddypress")},c(i,{className:"is-right",onClick:()=>(e=>{e&&-1!==P.indexOf(e)&&(z(k(j,["id",e])),N({itemIDs:A(P,t=>t!==e)}))})(e.id),label:y("Remove member","buddypress")},c(o,{icon:"no"}))),T&&"none"!==M&&c("div",{className:"item-header-avatar"},c("a",{href:e.link,target:"_blank"},c("img",{key:"avatar-"+e.id,className:"avatar",alt:h(y("Profile photo of %s","buddypress"),e.name),src:e.avatar_urls[M]}))),c("div",{className:"member-description"},t&&c("blockquote",{className:"wp-block-quote"},c("div",{dangerouslySetInnerHTML:{__html:e.latest_update.rendered}}),c("cite",null,B&&c("span",null,e.name)," ",I&&w&&c("a",{href:e.link,target:"_blank"},"(@",e.mention_name,")"))),!t&&B&&c("strong",null,c("a",{href:e.link,target:"_blank"},e.name)),!t&&I&&w&&c("span",{className:"user-nicename"},"@",e.mention_name),"last_activity"===E&&e.last_activity&&e.last_activity.date&&c("time",{dateTime:e.last_activity.date},h(y("Active %s","buddypress"),e.last_activity.timediff))))})),c(p,null,c(t,null,c(n,{title:y("Settings","buddypress"),initialOpen:!0},c(r,{label:y("Display the user name","buddypress"),checked:!!B,onChange:()=>{N({displayUserName:!B})},help:y(B?"Include the user's display name.":"Toggle to include user's display name.","buddypress")}),I&&c(r,{label:y("Display Mention slug","buddypress"),checked:!!w,onChange:()=>{N({displayMentionSlug:!w})},help:y(w?"Include the user's mention name under their display name.":"Toggle to display the user's mention name under their display name.","buddypress")}),T&&c(l,{label:y("Avatar size","buddypress"),value:M,options:e.AVATAR_SIZES,help:y('Select "None" to disable the avatar.',"buddypress"),onChange:e=>{N({avatarSize:e})}}),c(l,{label:y("BuddyPress extra information","buddypress"),value:E,options:Q,help:y('Select "None" to show no extra information.',"buddypress"),onChange:e=>{N({extraData:e})}}),"grid"===R&&c(u,{label:y("Columns","buddypress"),value:O,onChange:e=>N({columns:e}),min:2,max:4,required:!0}))),c(a,null,c(m,{controls:L})),q&&c("div",{className:G},F),(D||0===P.length)&&c(s,{icon:q?"":"groups",label:q?"":y("BuddyPress Members","buddypress"),instructions:y("Start typing the name of the member you want to add to the members list.","buddypress"),className:0!==P.length?"is-appender":"is-large"},c(_,{component:"members",objectQueryArgs:{exclude:P},slugValue:x,ariaLabel:y("Member's username","buddypress"),placeholder:y("Enter Member's username here…","buddypress"),onSelectItem:({itemID:e})=>{e&&-1===P.indexOf(e)&&N({itemIDs:[...P,parseInt(e,10)]})},useAvatar:T})))};var N=S;exports.default=N;
-},{"./constants":"gr8I"}],"XEHU":[function(require,module,exports) {
-"use strict";var e=t(require("./members/edit"));function t(e){return e&&e.__esModule?e:{default:e}}const{blocks:{registerBlockType:r},i18n:{__:s}}=wp;r("bp/members",{title:s("Members","buddypress"),description:s("BuddyPress Members.","buddypress"),icon:{background:"#fff",foreground:"#d84800",src:"groups"},category:"buddypress",attributes:{itemIDs:{type:"array",items:{type:"integer"},default:[]},avatarSize:{type:"string",default:"full"},displayMentionSlug:{type:"boolean",default:!0},displayUserName:{type:"boolean",default:!0},extraData:{type:"string",default:"none"},layoutPreference:{type:"string",default:"list"},columns:{type:"number",default:2}},edit:e.default});
-},{"./members/edit":"PZSE"}]},{},["XEHU"], null)
-//# sourceMappingURL=/bp-members/js/blocks/members.js.map
+// modules are defined as an array
+// [ module function, map of requires ]
+//
+// map of requires is short require name -> numeric require
+//
+// anything defined in a previous bundle is accessed via the
+// orig method which is the require for previous bundles
+parcelRequire = (function (modules, cache, entry, globalName) {
+  // Save the require from previous bundle to this closure if any
+  var previousRequire = typeof parcelRequire === 'function' && parcelRequire;
+  var nodeRequire = typeof require === 'function' && require;
+
+  function newRequire(name, jumped) {
+    if (!cache[name]) {
+      if (!modules[name]) {
+        // if we cannot find the module within our internal map or
+        // cache jump to the current global require ie. the last bundle
+        // that was added to the page.
+        var currentRequire = typeof parcelRequire === 'function' && parcelRequire;
+        if (!jumped && currentRequire) {
+          return currentRequire(name, true);
+        }
+
+        // If there are other bundles on this page the require from the
+        // previous one is saved to 'previousRequire'. Repeat this as
+        // many times as there are bundles until the module is found or
+        // we exhaust the require chain.
+        if (previousRequire) {
+          return previousRequire(name, true);
+        }
+
+        // Try the node require function if it exists.
+        if (nodeRequire && typeof name === 'string') {
+          return nodeRequire(name);
+        }
+
+        var err = new Error('Cannot find module \'' + name + '\'');
+        err.code = 'MODULE_NOT_FOUND';
+        throw err;
+      }
+
+      localRequire.resolve = resolve;
+      localRequire.cache = {};
+
+      var module = cache[name] = new newRequire.Module(name);
+
+      modules[name][0].call(module.exports, localRequire, module, module.exports, this);
+    }
+
+    return cache[name].exports;
+
+    function localRequire(x){
+      return newRequire(localRequire.resolve(x));
+    }
+
+    function resolve(x){
+      return modules[name][1][x] || x;
+    }
+  }
+
+  function Module(moduleName) {
+    this.id = moduleName;
+    this.bundle = newRequire;
+    this.exports = {};
+  }
+
+  newRequire.isParcelRequire = true;
+  newRequire.Module = Module;
+  newRequire.modules = modules;
+  newRequire.cache = cache;
+  newRequire.parent = previousRequire;
+  newRequire.register = function (id, exports) {
+    modules[id] = [function (require, module) {
+      module.exports = exports;
+    }, {}];
+  };
+
+  var error;
+  for (var i = 0; i < entry.length; i++) {
+    try {
+      newRequire(entry[i]);
+    } catch (e) {
+      // Save first error but execute all entries
+      if (!error) {
+        error = e;
+      }
+    }
+  }
+
+  if (entry.length) {
+    // Expose entry point to Node, AMD or browser globals
+    // Based on https://github.com/ForbesLindesay/umd/blob/master/template.js
+    var mainExports = newRequire(entry[entry.length - 1]);
+
+    // CommonJS
+    if (typeof exports === "object" && typeof module !== "undefined") {
+      module.exports = mainExports;
+
+    // RequireJS
+    } else if (typeof define === "function" && define.amd) {
+     define(function () {
+       return mainExports;
+     });
+
+    // <script>
+    } else if (globalName) {
+      this[globalName] = mainExports;
+    }
+  }
+
+  // Override the current require with this new one
+  parcelRequire = newRequire;
+
+  if (error) {
+    // throw error from earlier, _after updating parcelRequire_
+    throw error;
+  }
+
+  return newRequire;
+})({"bp-members/js/blocks/members/constants.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.EXTRA_DATA = exports.AVATAR_SIZES = void 0;
+
+/**
+ * WordPress dependencies.
+ */
+const {
+  i18n: {
+    __
+  }
+} = wp;
+/**
+ * Avatar sizes.
+ *
+ * @type {Array}
+ */
+
+const AVATAR_SIZES = [{
+  label: __('None', 'buddypress'),
+  value: 'none'
+}, {
+  label: __('Thumb', 'buddypress'),
+  value: 'thumb'
+}, {
+  label: __('Full', 'buddypress'),
+  value: 'full'
+}];
+/**
+ * BuddyPress Extra data.
+ *
+ * @type {Array}
+ */
+
+exports.AVATAR_SIZES = AVATAR_SIZES;
+const EXTRA_DATA = [{
+  label: __('None', 'buddypress'),
+  value: 'none'
+}, {
+  label: __('Last time the user was active', 'buddypress'),
+  value: 'last_activity'
+}, {
+  label: __('Latest activity the user posted', 'buddypress'),
+  value: 'latest_update'
+}];
+exports.EXTRA_DATA = EXTRA_DATA;
+},{}],"bp-members/js/blocks/members/edit.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _constants = require("./constants");
+
+/**
+ * WordPress dependencies.
+ */
+const {
+  blockEditor: {
+    InspectorControls,
+    BlockControls
+  },
+  components: {
+    Placeholder,
+    PanelBody,
+    SelectControl,
+    ToggleControl,
+    Button,
+    Dashicon,
+    Tooltip,
+    ToolbarGroup,
+    RangeControl
+  },
+  element: {
+    createElement,
+    Fragment,
+    useState
+  },
+  i18n: {
+    __,
+    sprintf
+  },
+  apiFetch,
+  url: {
+    addQueryArgs
+  }
+} = wp;
+/**
+ * BuddyPress dependencies.
+ */
+
+const {
+  blockComponents: {
+    AutoCompleter
+  },
+  blockData: {
+    isActive
+  }
+} = bp;
+/**
+ * Internal dependencies.
+ */
+
+/**
+ * External dependencies.
+ */
+const {
+  reject,
+  remove,
+  sortBy
+} = lodash;
+
+const getSlugValue = item => {
+  if (item && item.mention_name) {
+    return item.mention_name;
+  }
+
+  return null;
+};
+
+const editMembersBlock = ({
+  attributes,
+  setAttributes,
+  isSelected
+}) => {
+  const isAvatarEnabled = isActive('members', 'avatar');
+  const isMentionEnabled = isActive('activity', 'mentions');
+  const {
+    itemIDs,
+    avatarSize,
+    displayMentionSlug,
+    displayUserName,
+    extraData,
+    layoutPreference,
+    columns
+  } = attributes;
+  const hasMembers = 0 !== itemIDs.length;
+  const [members, setMembers] = useState([]);
+  const layoutControls = [{
+    icon: 'text',
+    title: __('List view', 'buddypress'),
+    onClick: () => setAttributes({
+      layoutPreference: 'list'
+    }),
+    isActive: layoutPreference === 'list'
+  }, {
+    icon: 'screenoptions',
+    title: __('Grid view', 'buddypress'),
+    onClick: () => setAttributes({
+      layoutPreference: 'grid'
+    }),
+    isActive: layoutPreference === 'grid'
+  }];
+  let membersList;
+  let containerClasses = 'bp-block-members avatar-' + avatarSize;
+  let extraDataOptions = _constants.EXTRA_DATA;
+
+  if (layoutPreference === 'grid') {
+    containerClasses += ' is-grid columns-' + columns;
+    extraDataOptions = _constants.EXTRA_DATA.filter(extra => {
+      return 'latest_update' !== extra.value;
+    });
+  }
+
+  const onSelectedMember = ({
+    itemID
+  }) => {
+    if (itemID && -1 === itemIDs.indexOf(itemID)) {
+      setAttributes({
+        itemIDs: [...itemIDs, parseInt(itemID, 10)]
+      });
+    }
+  };
+
+  const onRemoveMember = itemID => {
+    if (itemID && -1 !== itemIDs.indexOf(itemID)) {
+      setMembers(reject(members, ['id', itemID]));
+      setAttributes({
+        itemIDs: remove(itemIDs, value => {
+          return value !== itemID;
+        })
+      });
+    }
+  };
+
+  if (hasMembers && itemIDs.length !== members.length) {
+    apiFetch({
+      path: addQueryArgs(`/buddypress/v1/members`, {
+        populate_extras: true,
+        include: itemIDs
+      })
+    }).then(items => {
+      setMembers(sortBy(items, [item => {
+        return itemIDs.indexOf(item.id);
+      }]));
+    });
+  }
+
+  if (members.length) {
+    membersList = members.map(member => {
+      let hasActivity = false;
+      let memberItemClasses = 'member-content';
+
+      if (layoutPreference === 'list' && 'latest_update' === extraData && member.latest_update && member.latest_update.rendered) {
+        hasActivity = true;
+        memberItemClasses = 'member-content has-activity';
+      }
+
+      return createElement("div", {
+        key: 'bp-member-' + member.id,
+        className: memberItemClasses
+      }, isSelected && createElement(Tooltip, {
+        text: __('Remove member', 'buddypress')
+      }, createElement(Button, {
+        className: "is-right",
+        onClick: () => onRemoveMember(member.id),
+        label: __('Remove member', 'buddypress')
+      }, createElement(Dashicon, {
+        icon: "no"
+      }))), isAvatarEnabled && 'none' !== avatarSize && createElement("div", {
+        className: "item-header-avatar"
+      }, createElement("a", {
+        href: member.link,
+        target: "_blank"
+      }, createElement("img", {
+        key: 'avatar-' + member.id,
+        className: "avatar",
+        alt: sprintf(__('Profile photo of %s', 'buddypress'), member.name),
+        src: member.avatar_urls[avatarSize]
+      }))), createElement("div", {
+        className: "member-description"
+      }, hasActivity && createElement("blockquote", {
+        className: "wp-block-quote"
+      }, createElement("div", {
+        dangerouslySetInnerHTML: {
+          __html: member.latest_update.rendered
+        }
+      }), createElement("cite", null, displayUserName && createElement("span", null, member.name), "\xA0", isMentionEnabled && displayMentionSlug && createElement("a", {
+        href: member.link,
+        target: "_blank"
+      }, "(@", member.mention_name, ")"))), !hasActivity && displayUserName && createElement("strong", null, createElement("a", {
+        href: member.link,
+        target: "_blank"
+      }, member.name)), !hasActivity && isMentionEnabled && displayMentionSlug && createElement("span", {
+        className: "user-nicename"
+      }, "@", member.mention_name), 'last_activity' === extraData && member.last_activity && member.last_activity.date && createElement("time", {
+        dateTime: member.last_activity.date
+      }, sprintf(__('Active %s', 'buddypress'), member.last_activity.timediff))));
+    });
+  }
+
+  return createElement(Fragment, null, createElement(InspectorControls, null, createElement(PanelBody, {
+    title: __('Settings', 'buddypress'),
+    initialOpen: true
+  }, createElement(ToggleControl, {
+    label: __('Display the user name', 'buddypress'),
+    checked: !!displayUserName,
+    onChange: () => {
+      setAttributes({
+        displayUserName: !displayUserName
+      });
+    },
+    help: displayUserName ? __('Include the user\'s display name.', 'buddypress') : __('Toggle to include user\'s display name.', 'buddypress')
+  }), isMentionEnabled && createElement(ToggleControl, {
+    label: __('Display Mention slug', 'buddypress'),
+    checked: !!displayMentionSlug,
+    onChange: () => {
+      setAttributes({
+        displayMentionSlug: !displayMentionSlug
+      });
+    },
+    help: displayMentionSlug ? __('Include the user\'s mention name under their display name.', 'buddypress') : __('Toggle to display the user\'s mention name under their display name.', 'buddypress')
+  }), isAvatarEnabled && createElement(SelectControl, {
+    label: __('Avatar size', 'buddypress'),
+    value: avatarSize,
+    options: _constants.AVATAR_SIZES,
+    help: __('Select "None" to disable the avatar.', 'buddypress'),
+    onChange: option => {
+      setAttributes({
+        avatarSize: option
+      });
+    }
+  }), createElement(SelectControl, {
+    label: __('BuddyPress extra information', 'buddypress'),
+    value: extraData,
+    options: extraDataOptions,
+    help: __('Select "None" to show no extra information.', 'buddypress'),
+    onChange: option => {
+      setAttributes({
+        extraData: option
+      });
+    }
+  }), layoutPreference === 'grid' && createElement(RangeControl, {
+    label: __('Columns', 'buddypress'),
+    value: columns,
+    onChange: value => setAttributes({
+      columns: value
+    }),
+    min: 2,
+    max: 4,
+    required: true
+  }))), createElement(BlockControls, null, createElement(ToolbarGroup, {
+    controls: layoutControls
+  })), hasMembers && createElement("div", {
+    className: containerClasses
+  }, membersList), (isSelected || 0 === itemIDs.length) && createElement(Placeholder, {
+    icon: hasMembers ? '' : 'groups',
+    label: hasMembers ? '' : __('BuddyPress Members', 'buddypress'),
+    instructions: __('Start typing the name of the member you want to add to the members list.', 'buddypress'),
+    className: 0 !== itemIDs.length ? 'is-appender' : 'is-large'
+  }, createElement(AutoCompleter, {
+    component: "members",
+    objectQueryArgs: {
+      exclude: itemIDs
+    },
+    slugValue: getSlugValue,
+    ariaLabel: __('Member\'s username', 'buddypress'),
+    placeholder: __('Enter Member\'s username here…', 'buddypress'),
+    onSelectItem: onSelectedMember,
+    useAvatar: isAvatarEnabled
+  })));
+};
+
+var _default = editMembersBlock;
+exports.default = _default;
+},{"./constants":"bp-members/js/blocks/members/constants.js"}],"bp-members/js/blocks/members.js":[function(require,module,exports) {
+"use strict";
+
+var _edit = _interopRequireDefault(require("./members/edit"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * WordPress dependencies.
+ */
+const {
+  blocks: {
+    registerBlockType
+  },
+  i18n: {
+    __
+  }
+} = wp;
+/**
+ * Internal dependencies.
+ */
+
+registerBlockType('bp/members', {
+  title: __('Members', 'buddypress'),
+  description: __('BuddyPress Members.', 'buddypress'),
+  icon: {
+    background: '#fff',
+    foreground: '#d84800',
+    src: 'groups'
+  },
+  category: 'buddypress',
+  attributes: {
+    itemIDs: {
+      type: 'array',
+      items: {
+        type: 'integer'
+      },
+      default: []
+    },
+    avatarSize: {
+      type: 'string',
+      default: 'full'
+    },
+    displayMentionSlug: {
+      type: 'boolean',
+      default: true
+    },
+    displayUserName: {
+      type: 'boolean',
+      default: true
+    },
+    extraData: {
+      type: 'string',
+      default: 'none'
+    },
+    layoutPreference: {
+      type: 'string',
+      default: 'list'
+    },
+    columns: {
+      type: 'number',
+      default: 2
+    }
+  },
+  edit: _edit.default
+});
+},{"./members/edit":"bp-members/js/blocks/members/edit.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var global = arguments[3];
+var OVERLAY_ID = '__parcel__error__overlay__';
+var OldModule = module.bundle.Module;
+
+function Module(moduleName) {
+  OldModule.call(this, moduleName);
+  this.hot = {
+    data: module.bundle.hotData,
+    _acceptCallbacks: [],
+    _disposeCallbacks: [],
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || function () {});
+    },
+    dispose: function (fn) {
+      this._disposeCallbacks.push(fn);
+    }
+  };
+  module.bundle.hotData = null;
+}
+
+module.bundle.Module = Module;
+var checkedAssets, assetsToAccept;
+var parent = module.bundle.parent;
+
+if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
+  var hostname = "" || location.hostname;
+  var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38293" + '/');
+
+  ws.onmessage = function (event) {
+    checkedAssets = {};
+    assetsToAccept = [];
+    var data = JSON.parse(event.data);
+
+    if (data.type === 'update') {
+      var handled = false;
+      data.assets.forEach(function (asset) {
+        if (!asset.isNew) {
+          var didAccept = hmrAcceptCheck(global.parcelRequire, asset.id);
+
+          if (didAccept) {
+            handled = true;
+          }
+        }
+      }); // Enable HMR for CSS by default.
+
+      handled = handled || data.assets.every(function (asset) {
+        return asset.type === 'css' && asset.generated.js;
+      });
+
+      if (handled) {
+        console.clear();
+        data.assets.forEach(function (asset) {
+          hmrApply(global.parcelRequire, asset);
+        });
+        assetsToAccept.forEach(function (v) {
+          hmrAcceptRun(v[0], v[1]);
+        });
+      } else if (location.reload) {
+        // `location` global exists in a web worker context but lacks `.reload()` function.
+        location.reload();
+      }
+    }
+
+    if (data.type === 'reload') {
+      ws.close();
+
+      ws.onclose = function () {
+        location.reload();
+      };
+    }
+
+    if (data.type === 'error-resolved') {
+      console.log('[parcel] ✨ Error resolved');
+      removeErrorOverlay();
+    }
+
+    if (data.type === 'error') {
+      console.error('[parcel] 🚨  ' + data.error.message + '\n' + data.error.stack);
+      removeErrorOverlay();
+      var overlay = createErrorOverlay(data);
+      document.body.appendChild(overlay);
+    }
+  };
+}
+
+function removeErrorOverlay() {
+  var overlay = document.getElementById(OVERLAY_ID);
+
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+function createErrorOverlay(data) {
+  var overlay = document.createElement('div');
+  overlay.id = OVERLAY_ID; // html encode message and stack trace
+
+  var message = document.createElement('div');
+  var stackTrace = document.createElement('pre');
+  message.innerText = data.error.message;
+  stackTrace.innerText = data.error.stack;
+  overlay.innerHTML = '<div style="background: black; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; opacity: 0.85; font-family: Menlo, Consolas, monospace; z-index: 9999;">' + '<span style="background: red; padding: 2px 4px; border-radius: 2px;">ERROR</span>' + '<span style="top: 2px; margin-left: 5px; position: relative;">🚨</span>' + '<div style="font-size: 18px; font-weight: bold; margin-top: 20px;">' + message.innerHTML + '</div>' + '<pre>' + stackTrace.innerHTML + '</pre>' + '</div>';
+  return overlay;
+}
+
+function getParents(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return [];
+  }
+
+  var parents = [];
+  var k, d, dep;
+
+  for (k in modules) {
+    for (d in modules[k][1]) {
+      dep = modules[k][1][d];
+
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
+        parents.push(k);
+      }
+    }
+  }
+
+  if (bundle.parent) {
+    parents = parents.concat(getParents(bundle.parent, id));
+  }
+
+  return parents;
+}
+
+function hmrApply(bundle, asset) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (modules[asset.id] || !bundle.parent) {
+    var fn = new Function('require', 'module', 'exports', asset.generated.js);
+    asset.isNew = !modules[asset.id];
+    modules[asset.id] = [fn, asset.deps];
+  } else if (bundle.parent) {
+    hmrApply(bundle.parent, asset);
+  }
+}
+
+function hmrAcceptCheck(bundle, id) {
+  var modules = bundle.modules;
+
+  if (!modules) {
+    return;
+  }
+
+  if (!modules[id] && bundle.parent) {
+    return hmrAcceptCheck(bundle.parent, id);
+  }
+
+  if (checkedAssets[id]) {
+    return;
+  }
+
+  checkedAssets[id] = true;
+  var cached = bundle.cache[id];
+  assetsToAccept.push([bundle, id]);
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    return true;
+  }
+
+  return getParents(global.parcelRequire, id).some(function (id) {
+    return hmrAcceptCheck(global.parcelRequire, id);
+  });
+}
+
+function hmrAcceptRun(bundle, id) {
+  var cached = bundle.cache[id];
+  bundle.hotData = {};
+
+  if (cached) {
+    cached.hot.data = bundle.hotData;
+  }
+
+  if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
+    cached.hot._disposeCallbacks.forEach(function (cb) {
+      cb(bundle.hotData);
+    });
+  }
+
+  delete bundle.cache[id];
+  bundle(id);
+  cached = bundle.cache[id];
+
+  if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
+    cached.hot._acceptCallbacks.forEach(function (cb) {
+      cb();
+    });
+
+    return true;
+  }
+}
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","bp-members/js/blocks/members.js"], null)

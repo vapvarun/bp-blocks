@@ -201,7 +201,39 @@ function register_member_blocks() {
 					'default' => 15,
 				),
 			),
-			'render_callback'    => __NAMESPACE__ . '\bp_members_render_active_members_block',
+			// 'render_callback'    => __NAMESPACE__ . '\bp_members_render_active_members_block',
+		),
+		'bp/members-stats'   => array(
+			'name'               => 'bp/members-stats',
+			'editor_script'      => 'bp-members-stats-block',
+			'editor_script_url'  => plugins_url( 'js/blocks/members-stats.js', __FILE__ ),
+			'editor_script_deps' => array(
+				'wp-blocks',
+				'wp-element',
+				'wp-components',
+				'wp-i18n',
+				'wp-block-editor',
+				'wp-server-side-render',
+				'wp-api-fetch',
+				'wp-url',
+				'wp-block-editor',
+				'bp-block-components',
+				'bp-block-data',
+				'lodash',
+			),
+			'editor_style'       => 'bp-members-stats-block',
+			'editor_style_url'   => plugins_url( 'css/blocks/members-stats.css', __FILE__ ),
+			'attributes'         => array(
+				'title'      => array(
+					'type'    => 'string',
+					'default' => __( 'Members Stats', 'buddypress' ),
+				),
+				'maxMembers' => array(
+					'type'    => 'number',
+					'default' => 15,
+				),
+			),
+			'render_callback'    => __NAMESPACE__ . '\bp_members_render_members_stats_block',
 		),
 	);
 }
@@ -736,9 +768,10 @@ function bp_members_render_dynamic_members_block( $attributes = array() ) {
 				'bp-dynamic-members-script',
 				'bpDynamicMembersSettings',
 				array(
-					'path'  => ltrim( $path, '/' ),
-					'root'  => esc_url_raw( get_rest_url() ),
-					'nonce' => wp_create_nonce( 'wp_rest' ),
+					'path'     => ltrim( $path, '/' ),
+					'root'     => esc_url_raw( get_rest_url() ),
+					'nonce'    => wp_create_nonce( 'wp_rest' ),
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
 				)
 			);
 
@@ -939,3 +972,4 @@ function bp_members_render_active_members_block( $attributes = array() ) {
 
 	return bp_members_render_members_avatars_block( $block_args );
 }
+
